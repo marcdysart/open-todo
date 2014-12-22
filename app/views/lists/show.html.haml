@@ -12,16 +12,17 @@
   = @list.permissions
 
 %h1 Items
-%table.table
-  %tr
-    %th Description
-    %th Mark Complete
-  - @items.each do |item|
+%table.table#item-table
+  %thead
     %tr
-      %td= item.description
-      %td= link_to 'Mark Complete', item, method: :delete, class: 'btn'
+      %th Description
+      %th Mark Complete
+  %tbody
+    - @items.each do |item|
+      =render partial: 'items/item', locals: {item: item}
 %br
-= link_to 'Add new item', new_list_item_path(@list), class: 'btn'
+.new-item
+  =render partial: 'items/form', locals: {list: @list}
 %br
 %br
 = link_to 'Edit', edit_user_list_path(@user, @list), class: 'btn'

@@ -1,0 +1,9 @@
+ <% if @item.valid? %>
+    $('#item-table tbody').prepend("<%= escape_javascript(render @item) %>");
+    $('.new-item').html("<%= escape_javascript(render 'form') %>");
+ <% else %>
+   $('.new-item').html("<%= escape_javascript(render @item) %>");
+ <% end %>
+
+
+// $('#js-table tbody').append('<tr />').children('tr.last').append("<%= escape_javascript(render(@item)) %>");

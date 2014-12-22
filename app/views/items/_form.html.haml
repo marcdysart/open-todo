@@ -1,0 +1,17 @@
+= form_for [list, list.items.new] do |f|
+  - if list.errors.any?
+    .alert.alert-danger
+      %h4
+        There are #{pluralize(list.errors.count, "error")}.
+      %ul
+        - list.errors.full_messages.each do |msg|
+          %li= msg
+
+  .form-group
+    = f.label :"Enter New To-Do Item"
+    .row
+      .col-xs-6
+        = f.text_field :description, class: 'form-control', placeholder: "Enter To-Do Item"
+      .col-xs-2
+        = f.submit "Save To-Do Item", id: 'save-new-item', class: 'btn btn-default'
+      .col-xs-4
