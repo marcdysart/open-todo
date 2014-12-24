@@ -2,7 +2,7 @@ class ApiController < ApplicationController
   before_action :check_credentials
   skip_before_action :verify_authenticity_token
 
-  respond_to :json
+  respond_to :json, :js
 
   def check_credentials
 

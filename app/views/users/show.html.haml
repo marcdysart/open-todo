@@ -13,7 +13,9 @@
     %tr
       %td= link_to list.name, user_list_path(@user, list), class: 'btn'
 
-= link_to 'Add New List', new_user_list_path(@user), class: 'btn'
+%br
+.new-list
+  = render partial: 'lists/form', locals: {user: @user, list: @list}
 
 %br
 %br

@@ -1,26 +1,54 @@
-// when the page loads
+// Add a new Item
 //   attach an event to the form (listen for a submit event)
 $(document).ready(function(){
-    $("#save-new-item").click(function() {
       $( 'form' ).submit(function(event){
           var data = $(this).serialize();
-          console.log(data);
-
           $.ajax({
-            type: "POST",
+            type: "PUT",
             url: $(this).attr('action'),
             data: data,
-            dataType: "JSON.parse(response.body)"
-          }).success(function(json){
-            $('#item-table tbody').append(data);
-            $('.new-item').html("<%= escape_javascript(render 'form') %>");
-          });
-          console.log(JSON);
-
+            dataType: 'json',
+            success: function(){
+              $('#item-table tbody').append(JSON.parse(response.body));
+              $('.new-item').reset();
+              });
+          })
+          event.preventDefault();
       });
-  });
 });
 
+// Mark an Item completed.
+// $(document).ready(function(){
+//   $( 'form' ).submit(function(event){
+//     var data = $(this).serialize();
+//     $.ajax({
+//       type: "DELETE",
+//       url: $(this).attr('action'),
+//       data: data,
+//       dataType: 'json'
+//     }).success(function(){
+//       $('#item-table tbody').remove(JSON.parse(response.body));
+//     });
+//     event.preventDefault();
+//   });
+// });
+
+// Create a new List.
+// $(document).ready(function(){
+//   $( 'form' ).submit(function(event){
+//     var data = $(this).serialize();
+//     $.ajax({
+//       type: "POST",
+//       url: $(this).attr('action'),
+//       data: data,
+//       dataType: 'json'
+//     }).success(function(){
+//       $('#item-table tbody').append(JSON.parse(response.body));
+//       $('.new-item').reset();
+//     });
+//     event.preventDefault();
+//   });
+// });
 //   call the 'submit_new_item' method
 // end
 
@@ -28,6 +56,7 @@ $(document).ready(function(){
 // $.post( "lists/show.html.haml", function( submit_new_item ) {
 //   $( ".result" ).html( submit_new_item );
 // });
+
 
 //   assemble parameters
 //   make ajax call - POST
