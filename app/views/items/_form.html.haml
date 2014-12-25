@@ -1,4 +1,4 @@
-= form_for [list, list.items.new] do |f|
+= form_for [:api, user, list, Item.new] do |f|
   - if list.errors.any?
     .alert.alert-danger
       %h4
@@ -6,7 +6,7 @@
       %ul
         - list.errors.full_messages.each do |msg|
           %li= msg
-
+  =hidden_field_tag :password, @user.password
   .form-group
     = f.label :"Enter New To-Do Item"
     .row

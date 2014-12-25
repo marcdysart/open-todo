@@ -22,7 +22,7 @@
       = render partial: 'items/item', locals: {item: item}
 %br
 .new-item
-  = render partial: 'items/form', locals: {list: @list}
+  = render partial: 'items/form', locals: {user: @user, list: @list}
 %br
 %br
 = link_to 'Edit', edit_user_list_path(@user, @list), class: 'btn'
