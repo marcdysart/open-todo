@@ -1,11 +1,11 @@
-= form_for [user, list] do |f|
-  - if list.errors.any?
+= form_for [:api, user, List.new] do |f|
+  - if user.errors.any?
     #error_explanation
-      %h2= "#{pluralize(list.errors.count, "error")} prohibited this list from being saved:"
+      %h2= "#{pluralize(user.errors.count, "error")} prohibited this list from being saved:"
       %ul
         - list.errors.full_messages.each do |msg|
           %li= msg
-
+  =hidden_field_tag :password, @user.password
   .field
     = f.label :name
     = f.text_field :name

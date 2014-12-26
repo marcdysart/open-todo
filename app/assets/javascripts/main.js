@@ -1,29 +1,28 @@
-// Add a new Item
+
 
 $(document).ready(function(){
       $( '#new_item' ).submit(handle_submit);
-      $( '#button-2').click(function() {alert("Button was clicked")
-      });
 
+      $( '.mark-complete').click(handle_complete);
 });
 
 
-
+// Add a new Item
 function handle_submit(event){
   var data = $(this).serialize();
-
+  var site = $(this).attr('action');
+  console.log(site);
 
   $.ajax({
     type: "POST",
-    url: $(this).attr('action'),
+    url: site,
     data: data,
     dataType: 'json',
     success: function(response){
+      console.log(site);
       console.log('got it'+response);
       desc = response['item']['description'];
-      id =response['item'];
-      console.log(id);
-      item_num = 150;
+      item_num = 150;/// This will have to change once the delete button is fixed
       console.log(item_num);
       var new_row = $('<tr><td>'+desc+'</td><td><a data-method="delete" href= "/items/'+item_num+'" class="btn" id="button-2">Mark Complete</a></td></tr>');
       $('#item-table tbody').append(new_row);
@@ -36,13 +35,32 @@ function handle_submit(event){
 }
 
 function new_button_listener(event){
-  $( '#button-2').click(function() {alert("Button was clicked")
-});
+
 }
 
-// Add mark complete button
 
 // Mark an Item completed.
+
+function handle_complete(event){
+  var data = $(this).serialize();
+  var row = $(this).parents('tr');
+  var site = $(this).attr('action');
+  console.log(site);
+
+  $.ajax({
+    type: "POST",
+    url: site,
+    data: data,
+    dataType: 'json',
+    success: function(){
+      console.log(row)
+      console.log(data)
+      row.remove();
+    }
+  });
+  event.preventDefault();
+}
+
 // $(document).ready(function(){
 //   c
 // });
