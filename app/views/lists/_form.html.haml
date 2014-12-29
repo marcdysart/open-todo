@@ -5,7 +5,9 @@
       %ul
         - list.errors.full_messages.each do |msg|
           %li= msg
-  =hidden_field_tag :password, @user.password
+  =hidden_field_tag  :password, @user.password
+
+
   .field
     = f.label :name
     = f.text_field :name

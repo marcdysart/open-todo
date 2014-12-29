@@ -6,7 +6,9 @@
       %ul
         - list.errors.full_messages.each do |msg|
           %li= msg
-  =hidden_field_tag :password, @user.password
+  =hidden_field_tag :password, user.password
+  =hidden_field_tag :user_id, user.id
+  =hidden_field_tag :list_id, list.id
   .form-group
     = f.label :"Enter New To-Do Item"
     .row

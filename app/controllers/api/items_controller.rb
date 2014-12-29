@@ -31,9 +31,6 @@ class Api::ItemsController < ApiController
     @list = @user.lists.find(params[:list_id])
     @item = @list.items.build(item_params)
 
-    if (@item.completed == true)
-      @item.destroy
-    end
 
     if @item.save
       render json: @item
