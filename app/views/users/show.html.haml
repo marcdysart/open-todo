@@ -4,19 +4,20 @@
   %b Username:
   = @user.username
 
+
 %h1 Lists
-%table.table
+%table.table#list-table
   %tr
     %th List Name
 
   - @lists.each do |list|
     %tr
-      %td= link_to list.name, user_list_path(@user, list), class: 'btn'
+      %td= link_to list.name, user_list_path(@user, list), class: 'btn', data: { 'list-id'=> "#{list.id}"}
+
 
 %br
-.new-list
+.new-list#new-list
   = render partial: 'lists/form', locals: {user: @user}
-
 %br
 %br
 
