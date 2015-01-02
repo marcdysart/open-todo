@@ -21,10 +21,10 @@ describe Api::ItemsController do
         expect(Item.count).to eq(1)
         JSON.parse(response.body).should ==
         { 'item' =>
-          { 'description' => 'test_item', 'list_id' => @list.id, 'completed' => false }
+          { 'description' => 'test_item', 'list_id' => @list.id, 'completed' => false, 'id' => @list.items.last.id }
         }
       end
-    end
+    end #context
 
 
     context "without correct user's password" do
@@ -33,19 +33,19 @@ describe Api::ItemsController do
         post :create, params
         expect(response.status).to eq(401)
       end
-    end
-  end
+    end #context
+  end #create
 
   describe "index" do
 
     before do
       @user1 = create(:user)
       @list= @user.lists.create(name: "openlist", permissions: 'open' )
-      firstItem = @list.items.create(description: 'firstItem', completed: 'false')
-      secondItem = @list.items.create(description: 'secondItem', completed: 'false')
-      thirdItem = @list.items.create(description: 'thirdItem', completed: 'false')
+      @firstItem = @list.items.create(description: 'firstItem', completed: 'false')
+      @secondItem = @list.items.create(description: 'secondItem', completed: 'false')
+      @thirdItem = @list.items.create(description: 'thirdItem', completed: 'false')
       @privatelist= @user.lists.create(name: "privatelist", permissions: 'private' )
-      firstprivateItem = @privatelist.items.create(description: 'firstprivateItem', completed: 'false')
+      @firstprivateItem = @privatelist.items.create(description: 'firstprivateItem', completed: 'false')
     end
 
     context "with correct user's password" do
@@ -56,19 +56,19 @@ describe Api::ItemsController do
         JSON.parse(response.body).should ==
         { 'items' =>
           [
-            { 'description' => 'firstItem', 'list_id' => @list.id, 'completed' => false },
-            { 'description' => 'secondItem', 'list_id' => @list.id, 'completed' => false},
-            { 'description' => 'thirdItem', 'list_id' => @list.id, 'completed' => false },
-            { 'description' => 'firstprivateItem', 'list_id' => @privatelist.id, 'completed' => false }
+            { 'description' => 'firstItem', 'list_id' => @list.id, 'completed' => false, 'id' => @firstItem.id },
+            { 'description' => 'secondItem', 'list_id' => @list.id, 'completed' => false, 'id' => @secondItem.id},
+            { 'description' => 'thirdItem', 'list_id' => @list.id, 'completed' => false, 'id' => @thirdItem.id },
+            { 'description' => 'firstprivateItem', 'list_id' => @privatelist.id, 'completed' => false, 'id' => @firstprivateItem.id }
           ]
         }
       end
-    end
+    end #context
 
-    end
+  end #index
 
 
-end
+
 
     describe "#Update" do
       before do
@@ -88,7 +88,7 @@ end
           # check to see if the the new permission has changed.
           JSON.parse(response.body).should ==
           { 'item' =>
-            { 'description' => 'NotfirstItem', 'list_id' => @openList.id, 'completed' => false }
+            { 'description' => 'NotfirstItem', 'list_id' => @openList.id, 'completed' => false, 'id' => @firstItem.id }
           }
         end
 
@@ -100,7 +100,7 @@ end
           # Test to see if the item has been removed from the list.
           JSON.parse(response.body).should ==
           { 'item' =>
-            { 'description' => 'firstItem', 'list_id' => @openList.id, 'completed' => true }
+            { 'description' => 'firstItem', 'list_id' => @openList.id, 'completed' => true, 'id' => @firstItem.id }
           }
 
         end
@@ -117,10 +117,11 @@ end
           # check to see if the the new permission has changed.
           JSON.parse(response.body).should ==
           { 'item' =>
-            { 'description' => 'NotfirstItem', 'list_id' => @openList.id, 'completed' => false }
+            { 'description' => 'NotfirstItem', 'list_id' => @openList.id, 'completed' => false, 'id' => @firstItem.id }
           }
         end
-     end
+     end  # context
+   end #Update
 
      describe "destroy" do
        before do
@@ -135,12 +136,10 @@ end
            # change item completion
            params = {user_id: @user.id, password: @user.password, list_id: @openList.id, id:@firstItem.id, item: {description: @firstItem.description, completed: 'true'}}
            delete :destroy, params
-
            expect(@openList.items.count).to eq 0
 
          end
-       end
-     end
+       end #context
+     end  #Destroy
 
-  end
-end
+  end #describe

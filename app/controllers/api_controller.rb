@@ -1,13 +1,12 @@
 class ApiController < ApplicationController
   before_action :check_credentials
-  skip_before_action :verify_authenticity_token
+  skip_before_filter :verify_authenticity_token
 
   respond_to :json, :js
 
   def check_credentials
 
     @user = User.find(params[:user_id])
-
 
     unless @user.authenticate?(params[:password])
       render text: "bad username or password", :status => 401 and return

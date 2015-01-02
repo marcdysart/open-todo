@@ -36,7 +36,7 @@ describe Api::ListsController do
           JSON.parse(response.body).should ==
           { 'list' =>
 
-              { 'name' => 'openlist', 'user_id' => @user.id, 'permissions' => 'private' }
+              { 'name' => 'openlist', 'user_id' => @user.id, 'permissions' => 'private', 'id'=> @openList.id }
 
           }
         end
@@ -49,7 +49,7 @@ describe Api::ListsController do
         end
 
         it "gives an error when attempting to set an unsupported permission" do
-          params = {user_id: @user.id, password: @user.password, id: @privateList.id, list: { permissions: 'wrongpermission'}}
+          params = {user_id: @user.id, password: @user.password, id: @privateList.id, list: { name: 'Shouldnotwork', permissions: 'wrongpermission'}}
           response = put :update, params
           puts response.body.inspect
           expect(response.status).to eq(500)
@@ -80,7 +80,7 @@ describe Api::ListsController do
         expect(List.count).to eq(1)
         JSON.parse(response.body).should ==
         { 'list' =>
-            { 'name' => 'test_list', 'user_id' => @user.id, 'permissions' => 'open' }
+            { 'name' => 'test_list', 'user_id' => @user.id, 'permissions' => 'open', 'id'=> @user.lists.last.id }
         }
         post :create, params
         expect(response.status).to eq(500)
@@ -102,9 +102,9 @@ describe Api::ListsController do
   describe "index" do
 
     before do
-      openList= @user.lists.create(name: "openlist", permissions: 'open' )
-      visibleList= @user.lists.create(name: "visiblelist", permissions: 'visible' )
-      privateList= @user.lists.create(name: "privatelist", permissions: 'private' )
+      @openList= @user.lists.create(name: "openlist", permissions: 'open' )
+      @visibleList= @user.lists.create(name: "visiblelist", permissions: 'visible' )
+      @privateList= @user.lists.create(name: "privatelist", permissions: 'private' )
     end
 
       context "with correct user's password" do
@@ -115,9 +115,9 @@ describe Api::ListsController do
           JSON.parse(response.body).should ==
           { 'lists' =>
             [
-              { 'name' => 'openlist', 'user_id' => @user.id, 'permissions' => 'open' },
-              { 'name' => 'visiblelist', 'user_id' => @user.id, 'permissions' => 'visible'},
-              { 'name' => 'privatelist', 'user_id' => @user.id, 'permissions' => 'private' }
+              { 'name' => 'openlist', 'user_id' => @user.id, 'permissions' => 'open', 'id'=>@openList.id },
+              { 'name' => 'visiblelist', 'user_id' => @user.id, 'permissions' => 'visible', 'id'=>@visibleList.id},
+              { 'name' => 'privatelist', 'user_id' => @user.id, 'permissions' => 'private', 'id'=>@privateList.id }
             ]
           }
         end
@@ -131,8 +131,8 @@ describe Api::ListsController do
         JSON.parse(response.body).should ==
         { 'lists' =>
           [
-            { 'name' => 'openlist', 'user_id' => @user.id, 'permissions' => 'open' },
-            { 'name' => 'visiblelist', 'user_id' => @user.id, 'permissions' => 'visible'},
+            { 'name' => 'openlist', 'user_id' => @user.id, 'permissions' => 'open', 'id'=>@openList.id },
+            { 'name' => 'visiblelist', 'user_id' => @user.id, 'permissions' => 'visible', 'id'=>@visibleList.id},
           ]
         }
         end

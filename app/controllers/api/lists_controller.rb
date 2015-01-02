@@ -3,6 +3,7 @@ ActiveRecord::Base.include_root_in_json = true
 class Api::ListsController < ApiController
   before_action :check_credentials, except: [:index]
 
+
   def index
     return permission_denied_error unless conditions_met
     @user = User.find(params[:user_id])
@@ -26,11 +27,15 @@ class Api::ListsController < ApiController
 
   def update
     @user = User.find(params[:user_id])
-    @list=@user.lists.build(list_params)
-    perm = @list.permissions
-    puts perm
-    unless (perm == "private") || (perm == "viewable")  || (perm == "open")
-      render text: "Permissions not supported.  Permissions allowed are open, viewable, or private", :status => 500 and return
+    @list=@user.lists.find(params[:id])
+
+    if list_params[:permissions]
+      perm = list_params[:permissions]
+      valid_permissions = %w{private viewable open}
+
+      unless valid_permissions.include? perm
+        render text: "Permissions not supported.  Permissions allowed are open, viewable, or private", :status => 500 and return
+      end
     end
 
     unless @user.can?(:edit, @list)
@@ -47,10 +52,14 @@ class Api::ListsController < ApiController
     if !List.find_by_name(list_params[:name]).nil?
       render text: "false", :status => 500 and return
     end
-
+    @user = User.find(params[:user_id])
     @list = @user.lists.build(list_params)
+
+
     perm = @list.permissions
-    unless (perm == "private") || (perm == "viewable")  || (perm == "open")
+    valid_permissions = %w{private viewable open}
+
+    unless valid_permissions.include? perm
       render text: "Permissions not supported.  Permissions allowed are open, viewable, or private", :status => 500 and return
     end
     if @list.save
